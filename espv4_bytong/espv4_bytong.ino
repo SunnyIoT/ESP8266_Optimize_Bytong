@@ -225,13 +225,13 @@ void process_realtime() {
     // fade brown
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(153, 153, 153);
     } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(153, 102, 102);
     } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(153, 102, 51);
     } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(153, 102, 0);
       previousMillis = currentMillis;
     }
 
@@ -250,16 +250,16 @@ void process_realtime() {
   }
 
   if (mod == 2) {
-    // fade brown
+    // fade blue
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(0, 153, 255);
     } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(0, 102, 255);
     } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(0, 51, 255);
     } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(0, 0, 255);
       previousMillis = currentMillis;
     }
 
@@ -278,16 +278,16 @@ void process_realtime() {
   }
 
   if (mod == 3) {
-    // fade brown
+    // fade yellow
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(204, 255, 153);
     } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(204, 255, 102);
     } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 0, 0);
+      fade_rgb(204, 255, 51);
     } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 0, 0);;
+      fade_rgb(204, 255, 0);
       previousMillis = currentMillis;
     }
 
@@ -306,7 +306,7 @@ void process_realtime() {
   }
 
   if (mod == 4) {
-    // fade brown
+    // fade green
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
       fade_rgb(0, 255, 0);
