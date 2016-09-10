@@ -32,10 +32,12 @@ int timer = 0, state_connect  = 0, state_change_alias = 0;
 MicroGear microgear(client);
 
 /* Variable */
-#define R_strip 4
+#define R_strip 15
 #define G_strip 5
 #define B_strip 13
 int count_noti1 = 0, count_noti2 = 0, count_noti3 = 0, count_noti4 = 0;
+int R_brightness = 0, G_brightness = 0, B_brightness = 0;
+int fadeAmount = 1;
 unsigned long previousMillis = 0;
 
 int start_new                 = 0;  // Mode begin
@@ -221,117 +223,129 @@ void process_realtime() {
 
   // mode light rgb
   // source by http://access-excel.tips/wp-content/uploads/2015/02/rgb-color.jpg
+
   if (mod == 1)  {
-    // fade brown
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(153, 153, 153);
-    } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(153, 102, 102);
-    } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(153, 102, 51);
-    } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(153, 102, 0);
-      previousMillis = currentMillis;
+    // fade sky
+    fade_rgb(0, G_brightness, B_brightness);
+
+    R_brightness = R_brightness + fadeAmount;
+    G_brightness = G_brightness + fadeAmount;
+    B_brightness = B_brightness + fadeAmount;
+
+    if (R_brightness <= 0 || R_brightness >= 255) {
+      fadeAmount = -fadeAmount;
     }
+    if (G_brightness <= 0 || G_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    if (B_brightness <= 0 || B_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    delay(30);
 
     // send notification
-    count_noti1 += 1;
+    count_noti1++;
     if (count_noti1 == 1) {
       String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode1_message;
       doHttpGet(msg);
-      delay(5000);
-    } else {
-      count_noti1 = 2;
+      delay(2000);
     }
-
-  } else {
-    count_noti1 = 0;
+    count_noti1 = 2;
   }
 
   if (mod == 2) {
+    count_noti1 = 0;
     // fade blue
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 153, 255);
-    } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 102, 255);
-    } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 51, 255);
-    } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 0, 255);
-      previousMillis = currentMillis;
+    fade_rgb(0, 0, B_brightness);
+
+    R_brightness = R_brightness + fadeAmount;
+    G_brightness = G_brightness + fadeAmount;
+    B_brightness = B_brightness + fadeAmount;
+
+    if (R_brightness <= 0 || R_brightness >= 255) {
+      fadeAmount = -fadeAmount;
     }
+    if (G_brightness <= 0 || G_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    if (B_brightness <= 0 || B_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    delay(30);
 
     // send notification
-    count_noti2 += 1;
+    count_noti2++;
     if (count_noti2 == 1) {
       String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode2_message;
       doHttpGet(msg);
-      delay(5000);
-    } else {
-      count_noti2 = 2;
+      delay(2000);
     }
-
-  } else {
-    count_noti2 = 0;
+    count_noti2 = 2;
   }
 
   if (mod == 3) {
+    count_noti2 = 0;
     // fade yellow
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(204, 255, 153);
-    } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(204, 255, 102);
-    } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(204, 255, 51);
-    } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(204, 255, 0);
-      previousMillis = currentMillis;
+    fade_rgb(R_brightness, G_brightness, 0);
+
+    R_brightness = R_brightness + fadeAmount;
+    G_brightness = G_brightness + fadeAmount;
+    B_brightness = B_brightness + fadeAmount;
+
+    if (R_brightness <= 0 || R_brightness >= 255) {
+      fadeAmount = -fadeAmount;
     }
+    if (G_brightness <= 0 || G_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    if (B_brightness <= 0 || B_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    delay(30);
 
     // send notification
-    count_noti3 += 1;
+    count_noti3++;
     if (count_noti3 == 1) {
       String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode3_message;
       doHttpGet(msg);
-      delay(5000);
-    } else {
-      count_noti3 = 2;
+      delay(2000);
     }
+    count_noti3 = 2;
 
-  } else {
-    count_noti3 = 0;
   }
 
   if (mod == 4) {
+    count_noti3 = 0;
     // fade green
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 255, 0);
-    } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 204, 0);
-    } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 153, 0);
-    } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 102, 0);
-      previousMillis = currentMillis;
+    fade_rgb(0, G_brightness, 0);
+
+    R_brightness = R_brightness + fadeAmount;
+    G_brightness = G_brightness + fadeAmount;
+    B_brightness = B_brightness + fadeAmount;
+
+    if (R_brightness <= 0 || R_brightness >= 255) {
+      fadeAmount = -fadeAmount;
     }
+    if (G_brightness <= 0 || G_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    if (B_brightness <= 0 || B_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    delay(30);
 
     // send notification
-    count_noti4 += 1;
+    count_noti4++;
     if (count_noti4 == 1) {
       String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode4_message;
       doHttpGet(msg);
-      delay(5000);
-    } else {
-      count_noti4 = 2;
+      delay(2000);
     }
+    count_noti4 = 2;
 
-  } else {
-    count_noti4= 0;
   }
+  count_noti4 = 0;
+
 
   timer += 1;
 }
@@ -428,6 +442,7 @@ void setup() {
   swSer.begin(9600);
   swSer.setTimeout(100);
   Serial.println("Starting...");
+  fade_rgb(0, 0, 0);
   if (WiFi.begin(ssid, password)) {
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
@@ -449,7 +464,6 @@ void setup() {
 }
 
 void loop() {
-
   if (Esp.getFreeHeap() >= 32000) {
 
     if (WiFi.status() != WL_CONNECTED) {
