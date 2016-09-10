@@ -25,6 +25,11 @@ int timer = 0, state_connect  = 0, state_change_alias = 0;
 MicroGear microgear(client);
 
 /* Variable */
+#define R_strip 4
+#define G_strip 5
+#define B_strip 13
+unsigned long previousMillis = 0;
+
 int start_new                 = 0;  // Mode begin
 int mod1_t_on                 = 4;  // Turn on water
 int mod1_t_off                = 4;  // Turn off water
@@ -204,7 +209,62 @@ void process_realtime() {
       Serial.println(minute_datalogger);
       /* End Data Logger */
     }
+  }
 
+  // mode light rgb 
+  // source by http://access-excel.tips/wp-content/uploads/2015/02/rgb-color.jpg
+  if (mod == 1)  {
+    // fade brown
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= 1000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 2000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 3000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 4000) {
+      fade_rgb(0, 0, 0)
+      previousMillis = currentMillis;
+    }
+  } else if (mod == 2) {
+    // fade blue
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= 1000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 2000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 3000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 4000) {
+      fade_rgb(0, 0, 0)
+      previousMillis = currentMillis;
+    }
+  } else if (mod == 3) {
+    // fade yellow
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= 1000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 2000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 3000) {
+      fade_rgb(0, 0, 0)
+    } else if (currentMillis - previousMillis >= 4000) {
+      fade_rgb(0, 0, 0)
+      previousMillis = currentMillis;
+    }
+  } else if (mod == 4) {
+    // fade green
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= 1000) {
+      fade_rgb(0, 255, 0)
+    } else if (currentMillis - previousMillis >= 2000) {
+      fade_rgb(0, 204, 0)
+    } else if (currentMillis - previousMillis >= 3000) {
+      fade_rgb(0, 153, 0)
+    } else if (currentMillis - previousMillis >= 4000) {
+      fade_rgb(0, 102, 0)
+      previousMillis = currentMillis;
+    }
   }
 
   timer += 1;
@@ -251,8 +311,20 @@ void send_datalogger() {
   Serial.println("closing connection");
 }
 
+// function fade rgb strip
+void fade_rgb(int r, int g, int b)  {
+  r = map(r, 0, 255, 0, 1023);
+  g = map(g, 0, 255, 0, 1023);
+  b = map(b, 0, 255, 0, 1023);
+
+  analogWrite(R_strip, r);
+  analogWrite(G_strip, g);
+  analogWrite(B_strip, b);
+}
+
 void setup() {
   pinMode(2, INPUT);
+
   microgear.on(MESSAGE, onMsghandler);
   microgear.on(PRESENT, onFoundgear);
   microgear.on(ABSENT, onLostgear);
@@ -304,7 +376,6 @@ void loop() {
       Serial.println();
       Serial.println("WiFi connected");
     } else {
-
       if (state_send_db == 2) {
         send_datalogger();
         state_send_db = 0;
@@ -327,10 +398,8 @@ void loop() {
             timer = 0;
           } else {
             process_realtime();
+            // add rgb light
           }
-
-
-
         } else {
 
           Serial.println("connection lost, reconnect...");
