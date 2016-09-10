@@ -9,6 +9,13 @@ SoftwareSerial swSer(14, 12);
 const char* ssid              = "ESPERT-3020";
 const char* password          = "espertap";
 
+/* Setting Notification */
+String smartphone_key = "5681028219797504";
+String mode1_message = "SUNNY%20:%20ferment";
+String mode2_message = "SUNNY%20:%20watering";
+String mode3_message = "SUNNY%20:%20light";
+String mode4_message = "SUNNY%20:%20delis";
+
 /* Setting NETPIE */
 #define APPID                 "WebApp"
 #define KEY                   "kuZyWfJrig1mb7E"
@@ -28,6 +35,7 @@ MicroGear microgear(client);
 #define R_strip 4
 #define G_strip 5
 #define B_strip 13
+int count_noti1 = 0, count_noti2 = 0, count_noti3 = 0, count_noti4 = 0;
 unsigned long previousMillis = 0;
 
 int start_new                 = 0;  // Mode begin
@@ -211,60 +219,118 @@ void process_realtime() {
     }
   }
 
-  // mode light rgb 
+  // mode light rgb
   // source by http://access-excel.tips/wp-content/uploads/2015/02/rgb-color.jpg
   if (mod == 1)  {
     // fade brown
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
       previousMillis = currentMillis;
     }
-  } else if (mod == 2) {
-    // fade blue
+
+    // send notification
+    count_noti1 += 1;
+    if (count_noti1 == 1) {
+      String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode1_message;
+      doHttpGet(msg);
+      delay(5000);
+    } else {
+      count_noti1 = 2;
+    }
+
+  } else {
+    count_noti1 = 0;
+  }
+
+  if (mod == 2) {
+    // fade brown
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
       previousMillis = currentMillis;
     }
-  } else if (mod == 3) {
-    // fade yellow
+
+    // send notification
+    count_noti2 += 1;
+    if (count_noti2 == 1) {
+      String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode2_message;
+      doHttpGet(msg);
+      delay(5000);
+    } else {
+      count_noti2 = 2;
+    }
+
+  } else {
+    count_noti2 = 0;
+  }
+
+  if (mod == 3) {
+    // fade brown
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);
     } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 0, 0)
+      fade_rgb(0, 0, 0);;
       previousMillis = currentMillis;
     }
-  } else if (mod == 4) {
-    // fade green
+
+    // send notification
+    count_noti3 += 1;
+    if (count_noti3 == 1) {
+      String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode3_message;
+      doHttpGet(msg);
+      delay(5000);
+    } else {
+      count_noti3 = 2;
+    }
+
+  } else {
+    count_noti3 = 0;
+  }
+
+  if (mod == 4) {
+    // fade brown
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= 1000) {
-      fade_rgb(0, 255, 0)
+      fade_rgb(0, 255, 0);
     } else if (currentMillis - previousMillis >= 2000) {
-      fade_rgb(0, 204, 0)
+      fade_rgb(0, 204, 0);
     } else if (currentMillis - previousMillis >= 3000) {
-      fade_rgb(0, 153, 0)
+      fade_rgb(0, 153, 0);
     } else if (currentMillis - previousMillis >= 4000) {
-      fade_rgb(0, 102, 0)
+      fade_rgb(0, 102, 0);
       previousMillis = currentMillis;
     }
+
+    // send notification
+    count_noti4 += 1;
+    if (count_noti4 == 1) {
+      String msg = "http://www.espert.io/MySmartphone/send?key=" + smartphone_key + "&message=" + mode4_message;
+      doHttpGet(msg);
+      delay(5000);
+    } else {
+      count_noti4 = 2;
+    }
+
+  } else {
+    count_noti4= 0;
   }
 
   timer += 1;
@@ -311,7 +377,7 @@ void send_datalogger() {
   Serial.println("closing connection");
 }
 
-// function fade rgb strip
+/* Function FADE RGB led strip */
 void fade_rgb(int r, int g, int b)  {
   r = map(r, 0, 255, 0, 1023);
   g = map(g, 0, 255, 0, 1023);
@@ -320,6 +386,34 @@ void fade_rgb(int r, int g, int b)  {
   analogWrite(R_strip, r);
   analogWrite(G_strip, g);
   analogWrite(B_strip, b);
+}
+
+/* Function HTTP GET Notification */
+void doHttpGet(String msg) {
+  HTTPClient http;
+  Serial.print("[HTTP] begin...\n");
+
+  http.begin(msg); // GET HTTP
+  Serial.println(msg);
+
+  // start connection and send HTTP header
+  int httpCode = http.GET();
+
+  // httpCode will be negative on error
+  if (httpCode > 0) {
+    // HTTP header has been send and Server response header has been handled
+    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+    Serial.print("[CONTENT]\n");
+
+    // file found at server
+    if (httpCode == HTTP_CODE_OK) {
+      String payload = http.getString();
+      Serial.println(payload);
+    }
+  } else {
+    Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
+  http.end();
 }
 
 void setup() {
