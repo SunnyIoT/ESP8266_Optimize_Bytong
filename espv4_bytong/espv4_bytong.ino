@@ -380,7 +380,6 @@ void receiver_data_website() {
   root.printTo(swSer);
   swSer.println();
   Serial.println();
-  start_new = 0;
 }
 
 void send_datalogger() {
