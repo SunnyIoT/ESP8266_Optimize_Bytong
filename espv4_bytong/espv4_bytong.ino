@@ -224,6 +224,24 @@ void process_realtime() {
   // mode light rgb
   // source by http://access-excel.tips/wp-content/uploads/2015/02/rgb-color.jpg
 
+  if (mod == 0)  {
+    // fade sky
+    fade_rgb(0, 0, 0);
+
+    R_brightness = R_brightness + fadeAmount;
+    G_brightness = G_brightness + fadeAmount;
+    B_brightness = B_brightness + fadeAmount;
+
+    if (R_brightness <= 0 || R_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    if (G_brightness <= 0 || G_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+    if (B_brightness <= 0 || B_brightness >= 255) {
+      fadeAmount = -fadeAmount;
+    }
+  }
   if (mod == 1)  {
     // fade sky
     fade_rgb(0, G_brightness, B_brightness);
@@ -241,7 +259,6 @@ void process_realtime() {
     if (B_brightness <= 0 || B_brightness >= 255) {
       fadeAmount = -fadeAmount;
     }
-    delay(30);
 
     // send notification
     count_noti1++;
@@ -271,7 +288,6 @@ void process_realtime() {
     if (B_brightness <= 0 || B_brightness >= 255) {
       fadeAmount = -fadeAmount;
     }
-    delay(30);
 
     // send notification
     count_noti2++;
@@ -301,7 +317,6 @@ void process_realtime() {
     if (B_brightness <= 0 || B_brightness >= 255) {
       fadeAmount = -fadeAmount;
     }
-    delay(30);
 
     // send notification
     count_noti3++;
@@ -332,7 +347,6 @@ void process_realtime() {
     if (B_brightness <= 0 || B_brightness >= 255) {
       fadeAmount = -fadeAmount;
     }
-    delay(30);
 
     // send notification
     count_noti4++;
@@ -432,7 +446,9 @@ void doHttpGet(String msg) {
 
 void setup() {
   pinMode(2, INPUT);
-
+  pinMode(5, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(15, OUTPUT);
   microgear.on(MESSAGE, onMsghandler);
   microgear.on(PRESENT, onFoundgear);
   microgear.on(ABSENT, onLostgear);
