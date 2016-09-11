@@ -253,7 +253,7 @@ void process_realtime() {
     if (R_brightness <= 0 || R_brightness >= 255) {
       fadeAmount = -fadeAmount;
     }
-    if (G_brightness <= 0 || G_brightness >= 255) {
+    if (G_brightness <= 0 || G_brightness >= 128) { // ลิมิตค่าควาสว่าง 0 - 128 ไม่ให้สว่างเกิน
       fadeAmount = -fadeAmount;
     }
     if (B_brightness <= 0 || B_brightness >= 255) {
