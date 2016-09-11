@@ -33,14 +33,14 @@ MicroGear microgear(client);
 
 /* Variable */
 #define R_strip 15
-#define G_strip 5
-#define B_strip 13
+#define G_strip 13
+#define B_strip 5
 int count_noti1 = 0, count_noti2 = 0, count_noti3 = 0, count_noti4 = 0;
 int R_brightness = 0, G_brightness = 0, B_brightness = 0;
 int fadeAmount = 1;
 unsigned long previousMillis = 0;
 
-int start_new                 = 0;  // Mode begin
+int start_new                 = 1;  // Mode begin
 int mod1_t_on                 = 4;  // Turn on water
 int mod1_t_off                = 4;  // Turn off water
 int mod2_t_f                  = 20; // Watering
@@ -145,17 +145,18 @@ void onConnected(char *attribute, uint8_t* msg, unsigned int msglen) {
 
 void process_realtime() {
 
-  if (st_b == 1 && digitalRead(2) == 0) {
+  if (st_b == 1 && digitalRead(4) == 0) {
     start_new = 1;
     receiver_data_website();
     delay(100);
   }
-  if (st_b == 0 && digitalRead(2) == 1) {
+  if (st_b == 0 && digitalRead(4) == 1) {
     start_new = 0;
     receiver_data_website();
     delay(100);
   }
-  st_b = digitalRead(2);
+  //Serial.println(digitalRead(4));
+  st_b = digitalRead(4);
   if (swSer.available()) {
     json1 = swSer.readString();
     x = 1;
@@ -253,7 +254,7 @@ void process_realtime() {
     if (R_brightness <= 0 || R_brightness >= 255) {
       fadeAmount = -fadeAmount;
     }
-    if (G_brightness <= 0 || G_brightness >= 128) { // ลิมิตค่าควาสว่าง 0 - 128 ไม่ให้สว่างเกิน
+    if (G_brightness <= 0 || G_brightness >= 255) { // ลิมิตค่าควาสว่าง 0 - 128 ไม่ให้สว่างเกิน
       fadeAmount = -fadeAmount;
     }
     if (B_brightness <= 0 || B_brightness >= 255) {
@@ -408,7 +409,7 @@ void send_datalogger() {
 /* Function FADE RGB led strip */
 void fade_rgb(int r, int g, int b)  {
   r = map(r, 0, 255, 0, 1023);
-  g = map(g, 0, 255, 0, 1023);
+  g = map(g, 0, 255, 0, 255);
   b = map(b, 0, 255, 0, 1023);
 
   analogWrite(R_strip, r);
@@ -445,10 +446,12 @@ void doHttpGet(String msg) {
 }
 
 void setup() {
-  pinMode(2, INPUT);
+  pinMode(4, INPUT_PULLUP);
   pinMode(5, OUTPUT);
   pinMode(13, OUTPUT);
   pinMode(15, OUTPUT);
+  fade_rgb(0, 0, 0);
+  st_b = digitalRead(4);
   microgear.on(MESSAGE, onMsghandler);
   microgear.on(PRESENT, onFoundgear);
   microgear.on(ABSENT, onLostgear);
@@ -458,7 +461,7 @@ void setup() {
   swSer.begin(9600);
   swSer.setTimeout(100);
   Serial.println("Starting...");
-  fade_rgb(0, 0, 0);
+
   if (WiFi.begin(ssid, password)) {
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
@@ -477,6 +480,13 @@ void setup() {
     strcat(html_alias, ALIAS);
     state_change_alias = 1;
   }
+  fade_rgb(255, 0, 0);
+  delay(1000);
+  fade_rgb(0, 255, 0);
+  delay(1000);
+  fade_rgb(0, 0, 255);
+  delay(1000);
+  fade_rgb(0, 0, 0);
 }
 
 void loop() {
